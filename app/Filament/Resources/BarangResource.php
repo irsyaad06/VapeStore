@@ -2,16 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BarangResource\Pages;
-use App\Filament\Resources\BarangResource\RelationManagers;
-use App\Models\Barang;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Barang;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Section;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use App\Filament\Resources\BarangResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\BarangResource\Pages\EditBarang;
+use App\Filament\Resources\BarangResource\RelationManagers;
+use App\Filament\Resources\BarangResource\Pages\ListBarangs;
+use App\Filament\Resources\BarangResource\Pages\CreateBarang;
 
 class BarangResource extends Resource
 {
@@ -23,7 +32,16 @@ class BarangResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make('Barang')
+                    ->description('')
+                    ->schema([
+                        TextInput::make('nama'),
+                        TextInput::make('harga'),
+                        TextInput::make('tipe'),
+                        TextInput::make('stok'),
+                        TextInput::make('gambar'),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -31,7 +49,11 @@ class BarangResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('gambar'),
+                TextColumn::make('nama'),
+                TextColumn::make('harga'),
+                TextColumn::make('tipe'),
+                TextColumn::make('stok'),
             ])
             ->filters([
                 //
