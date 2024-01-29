@@ -29,7 +29,7 @@ class BarangResource extends Resource
 {
     protected static ?string $model = Barang::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-swatch';
 
     protected static ?string $pluralModelLabel = 'Device';
 
@@ -40,17 +40,18 @@ class BarangResource extends Resource
                 Section::make('Barang')
                     ->description('')
                     ->schema([
-                        TextInput::make('nama'),
-                        TextInput::make('harga'),
+                        TextInput::make('nama')->required(),
+                        TextInput::make('harga')->required(),
                         Select::make('tipe')
                             ->options([
                                 'Vape' => 'Vape',
                                 'Mod' => 'Mod',
                                 'Pod' => 'Pod',
                             ])
-                            ->native(false),
-                        TextInput::make('stok')->default(0)->numeric(),
-                        FileUpload::make('gambar')->image()->preserveFilenames()->disk('public'),
+                            ->native(false)
+                            ->required(),
+                        TextInput::make('stok')->default(0)->numeric()->required(),
+                        FileUpload::make('gambar')->image()->preserveFilenames()->disk('public')->openable()->previewable()->required()->columnSpan('full'),
                     ])
                     ->columns(2),
             ]);
@@ -60,9 +61,14 @@ class BarangResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('gambar')->disk('public')->width(100)->height(100)->square(),
+                ImageColumn::make('gambar')->disk('public')->width(100)->height(100)->square()->visibility('private'),
                 TextColumn::make('nama'),
-                TextColumn::make('harga')->money('IDR'),
+                TextColumn::make('harga')->numeric(
+                    decimalPlaces: 0,
+                    decimalSeparator: '.',
+                    thousandsSeparator: ',',
+                )
+                ->prefix('Rp. '),
                 TextColumn::make('tipe'),
                 TextColumn::make('stok'),
             ])
