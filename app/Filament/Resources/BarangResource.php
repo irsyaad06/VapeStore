@@ -11,10 +11,13 @@ use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\ImageColumn;
 use App\Filament\Resources\BarangResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BarangResource\Pages\EditBarang;
@@ -28,6 +31,8 @@ class BarangResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $pluralModelLabel = 'Device';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -37,9 +42,15 @@ class BarangResource extends Resource
                     ->schema([
                         TextInput::make('nama'),
                         TextInput::make('harga'),
-                        TextInput::make('tipe'),
-                        TextInput::make('stok'),
-                        TextInput::make('gambar'),
+                        Select::make('tipe')
+                            ->options([
+                                'Vape' => 'Vape',
+                                'Mod' => 'Mod',
+                                'Pod' => 'Pod',
+                            ])
+                            ->native(false),
+                        TextInput::make('stok')->default(0)->numeric(),
+                        FileUpload::make('gambar')->image()->preserveFilenames()->disk('public'),
                     ])
                     ->columns(2),
             ]);
@@ -49,9 +60,9 @@ class BarangResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('gambar'),
+                ImageColumn::make('gambar')->disk('public')->width(100)->height(100)->square(),
                 TextColumn::make('nama'),
-                TextColumn::make('harga'),
+                TextColumn::make('harga')->money('IDR'),
                 TextColumn::make('tipe'),
                 TextColumn::make('stok'),
             ])
@@ -60,7 +71,8 @@ class BarangResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
+                Tables\Actions\DeleteAction::make(),
+                ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
