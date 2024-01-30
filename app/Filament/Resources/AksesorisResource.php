@@ -2,40 +2,31 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\AksesorisResource\Pages;
+use App\Filament\Resources\AksesorisResource\RelationManagers;
+use App\Models\Aksesoris;
 use Filament\Forms;
-use Filament\Tables;
-use App\Models\Barang;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
-use App\Filament\Resources\BarangResource\Pages;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\BarangResource\Pages\EditBarang;
-use App\Filament\Resources\BarangResource\RelationManagers;
-use App\Filament\Resources\BarangResource\Pages\ListBarangs;
-use App\Filament\Resources\BarangResource\Pages\CreateBarang;
-use Filament\Tables\Filters\SelectFilter;
 
-class BarangResource extends Resource
+class AksesorisResource extends Resource
 {
-    protected static ?string $model = Barang::class;
+    protected static ?string $model = Aksesoris::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-swatch';
+    protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
-    protected static ?string $pluralModelLabel = 'Automizer';
-
-    protected static ?int $navigationSort = 0;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -48,12 +39,9 @@ class BarangResource extends Resource
                         TextInput::make('harga')->required(),
                         Select::make('tipe')
                             ->options([
-                                'Vape' => 'Vape',
-                                'Mod' => 'Mod',
-                                'Pod' => 'Pod',
-                                'RTA' => 'RTA',
-                                'RDA' => 'RDA',
-                                'Batre' => 'Batre',
+                                'Lanyard' => 'Lanyard',
+                                'Panel' => 'Panel',
+                                'Garskin' => 'Garskin',
                             ])
 
                             ->native(false)
@@ -80,24 +68,21 @@ class BarangResource extends Resource
                 ->prefix('Rp. '),
                 TextColumn::make('tipe')
                     ->badge()
-                    ->searchable(),
+                    ->searchable()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Lanyard' => 'warning',
+                        'Panel' => 'primary',
+                        'Garskin' => 'success',
+                    }),
                 TextColumn::make('stok')->searchable()->suffix(' pcs'),
             ])
             ->filters([
-                SelectFilter::make('tipe')
-                    ->options([
-                        'Vape' => 'Vape',
-                        'Mod' => 'Mod',
-                        'Pod' => 'Pod',
-                        'RTA' => 'RTA',
-                        'RDA' => 'RDA',
-                        'Batre' => 'Batre',
-                    ])
+
             ])
             ->actions([
                 ViewAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                ])
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -115,9 +100,9 @@ class BarangResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBarangs::route('/'),
-            'create' => Pages\CreateBarang::route('/create'),
-            'edit' => Pages\EditBarang::route('/{record}/edit'),
+            'index' => Pages\ListAksesoris::route('/'),
+            'create' => Pages\CreateAksesoris::route('/create'),
+            'edit' => Pages\EditAksesoris::route('/{record}/edit'),
         ];
     }
 }
