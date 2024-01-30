@@ -48,6 +48,7 @@ class BarangResource extends Resource
                                 'Mod' => 'Mod',
                                 'Pod' => 'Pod',
                             ])
+
                             ->native(false)
                             ->required(),
                         TextInput::make('stok')->default(0)->numeric()->required(),
@@ -69,7 +70,13 @@ class BarangResource extends Resource
                     thousandsSeparator: ',',
                 )
                 ->prefix('Rp. '),
-                TextColumn::make('tipe'),
+                TextColumn::make('tipe')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Vape' => 'warning',
+                        'Mod' => 'success',
+                        'Pod' => 'danger',
+                    }),
                 TextColumn::make('stok'),
             ])
             ->filters([
