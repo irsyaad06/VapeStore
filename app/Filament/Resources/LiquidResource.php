@@ -85,9 +85,8 @@ class LiquidResource extends Resource
             ->filters([
                 SelectFilter::make('tipe')
                 ->options([
-                    'Vape' => 'Vape',
-                    'Mod' => 'Mod',
-                    'Pod' => 'Pod',
+                    'Freebase' => 'Freebase',
+                    'SaltNic' => 'SaltNic',
                 ])
             ])
             ->actions([
