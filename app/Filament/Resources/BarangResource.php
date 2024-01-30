@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Select;
@@ -24,6 +25,7 @@ use App\Filament\Resources\BarangResource\Pages\EditBarang;
 use App\Filament\Resources\BarangResource\RelationManagers;
 use App\Filament\Resources\BarangResource\Pages\ListBarangs;
 use App\Filament\Resources\BarangResource\Pages\CreateBarang;
+use Filament\Tables\Filters\SelectFilter;
 
 class BarangResource extends Resource
 {
@@ -63,27 +65,34 @@ class BarangResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('gambar')->disk('public')->width(100)->height(100)->square()->visibility('private'),
-                TextColumn::make('nama'),
+                TextColumn::make('nama')->searchable(),
                 TextColumn::make('harga')->numeric(
                     decimalPlaces: 0,
                     decimalSeparator: '.',
                     thousandsSeparator: ',',
                 )
+                ->searchable()
                 ->prefix('Rp. '),
                 TextColumn::make('tipe')
                     ->badge()
+                    ->searchable()
                     ->color(fn (string $state): string => match ($state) {
                         'Vape' => 'warning',
                         'Mod' => 'success',
                         'Pod' => 'danger',
                     }),
-                TextColumn::make('stok'),
+                TextColumn::make('stok')->searchable()->suffix(' pcs'),
             ])
             ->filters([
-                //
+                SelectFilter::make('tipe')
+                    ->options([
+                        'Vape' => 'Vape',
+                        'Mod' => 'Mod',
+                        'Pod' => 'Pod',
+                    ])
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ViewAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 ])
             ->bulkActions([
