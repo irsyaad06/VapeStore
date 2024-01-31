@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9508538374fb7dc337ecfe3b5f8bd47",
+    "content-hash": "b4da859dc7d2ae9dad5998e0a456ea89",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -89,7 +89,7 @@
             "require": {
                 "blade-ui-kit/blade-icons": "^1.1",
                 "illuminate/support": "^9.0|^10.0",
-                "php": "^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
                 "orchestra/testbench": "^7.0|^8.0",
@@ -10241,7 +10241,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.1||^8.3"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
